@@ -70,6 +70,7 @@ namespace EShop.WebAPI.Controllers
             {
                 return NotFound();
             }
+            
             response = _service.Update(obj);
             return Ok(response); ;
         }

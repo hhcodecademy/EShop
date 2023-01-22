@@ -1,6 +1,7 @@
 ﻿
 using AutoMapper;
 using EShop.BLL.Exceptions;
+using EShop.BLL.Helper;
 using EShop.BLL.Services.Inerfaces;
 using EShop.DAL.Repository.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -30,6 +31,7 @@ namespace EShop.BLL.Services
             try
             {
                 TEntity entity = _mapper.Map<TEntity>(item);
+                entity.SetValue<TEntity>("InsertDate", DateTime.Now);
                 TEntity dbEntity = await _genericRepository.AddAsync(entity);
                 return _mapper.Map<TDto>(dbEntity);
             }
@@ -38,10 +40,10 @@ namespace EShop.BLL.Services
                 _logger.LogError(ex.Message);
                 _logger.LogError(ex.StackTrace);
                 //throw  new YourCustomException();
-              throw new CustomException("BLL də əlavə edillərkən xəta yarandı. Xahiş olunur adminsitrator ilə əlaqə saxla.");
+                throw new CustomException("BLL də əlavə edillərkən xəta yarandı. Xahiş olunur adminsitrator ilə əlaqə saxla.");
             }
 
-           
+
         }
 
         public void Delete(int id)
@@ -65,7 +67,9 @@ namespace EShop.BLL.Services
         public TDto Update(TDto item)
         {
             TEntity entity = _mapper.Map<TEntity>(item);
+            entity.SetValue<TEntity>("UpdateDate", DateTime.Now);
             TEntity dbEntity = _genericRepository.Update(entity);
+
             return _mapper.Map<TDto>(dbEntity);
         }
     }

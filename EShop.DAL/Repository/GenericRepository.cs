@@ -1,4 +1,5 @@
 ﻿using EShop.DAL.Data;
+using EShop.DAL.DBModel;
 using EShop.DAL.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,9 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace EShop.DAL.Repository
 {
-    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
         private readonly AppDbContext _dbContext;
         protected readonly DbSet<TEntity> _entities;
@@ -20,6 +22,7 @@ namespace EShop.DAL.Repository
         }
         public async Task<TEntity> AddAsync(TEntity item)
         {
+          
             await _entities.AddAsync(item);
             _dbContext.SaveChanges();
             return item;
@@ -46,6 +49,9 @@ namespace EShop.DAL.Repository
 
         public TEntity Update(TEntity item)
         {
+           var dbEntity = _entities.Find(item.Id);
+            item.InsertDate = dbEntity.InsertDate;
+           // item.UpdateDate = DateTime.Now;        
             _entities.Update(item);
             _dbContext.SaveChanges();
             return item;
