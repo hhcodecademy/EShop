@@ -1,9 +1,12 @@
 using EShop.BLL.Mapping;
 using EShop.BLL.Services;
 using EShop.BLL.Services.Inerfaces;
+using EShop.BLL.Validations;
 using EShop.DAL.Data;
 using EShop.DAL.Repository;
 using EShop.DAL.Repository.Interfaces;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -39,6 +42,10 @@ namespace EShop.WebAdmin
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
             services.AddControllersWithViews();
+
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssembly(typeof(ProductValidation).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

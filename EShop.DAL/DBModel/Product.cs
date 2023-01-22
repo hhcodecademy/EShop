@@ -14,7 +14,7 @@ namespace EShop.DAL.DBModel
         public ProductCategory ProductCategory { get; set; }
         public string Marka { get; set; }
         public string Model { get; set; }
-        //public decimal UnitOfPrice { get; set; }
-        //public int TotalCount { get; set; }
+        public decimal UnitOfPrice { get; set; }
+        public int TotalCount { get; set; }
     }
 }

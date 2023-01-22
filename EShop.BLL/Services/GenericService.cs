@@ -1,7 +1,9 @@
 ﻿
 using AutoMapper;
+using EShop.BLL.Exceptions;
 using EShop.BLL.Services.Inerfaces;
 using EShop.DAL.Repository.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,21 +12,36 @@ using System.Threading.Tasks;
 
 namespace EShop.BLL.Services
 {
-    public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> where TDto : class where TEntity : class
+    public class GenericService
+        <TDto, TEntity> : IGenericService<TDto, TEntity> where TDto : class where TEntity : class
     {
         private readonly IGenericRepository<TEntity> _genericRepository;
         private readonly IMapper _mapper;
-        public GenericService(IGenericRepository<TEntity> genericRepository, IMapper mapper)
+        private readonly ILogger<GenericService<TDto, TEntity>> _logger;
+        public GenericService(IGenericRepository<TEntity> genericRepository, IMapper mapper, ILogger<GenericService<TDto, TEntity>> logger)
         {
             _genericRepository = genericRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<TDto> AddAsync(TDto item)
         {
-            TEntity entity = _mapper.Map<TEntity>(item);
-            TEntity dbEntity = await _genericRepository.AddAsync(entity);
-            return _mapper.Map<TDto>(dbEntity);
+            try
+            {
+                TEntity entity = _mapper.Map<TEntity>(item);
+                TEntity dbEntity = await _genericRepository.AddAsync(entity);
+                return _mapper.Map<TDto>(dbEntity);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                //throw  new YourCustomException();
+              throw new CustomException("BLL də əlavə edillərkən xəta yarandı. Xahiş olunur adminsitrator ilə əlaqə saxla.");
+            }
+
+           
         }
 
         public void Delete(int id)
@@ -48,7 +65,7 @@ namespace EShop.BLL.Services
         public TDto Update(TDto item)
         {
             TEntity entity = _mapper.Map<TEntity>(item);
-            TEntity dbEntity =  _genericRepository.Update(entity);
+            TEntity dbEntity = _genericRepository.Update(entity);
             return _mapper.Map<TDto>(dbEntity);
         }
     }
