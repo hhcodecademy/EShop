@@ -15,6 +15,7 @@ namespace EShop.BLL.Mapping
         {
             CreateMap<ProductCategory, ProductCategoryDto>().ReverseMap();
             CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<ProductDocument, ProductDocumentDto>().ReverseMap();
         }
     }
 }

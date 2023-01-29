@@ -41,6 +41,9 @@ namespace EShop.WebAdmin
             services.AddAutoMapper(typeof(CustomMapping));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
+      
+            services.AddScoped<IProductService, ProductService>();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddControllersWithViews();
 
             services.AddFluentValidationAutoValidation();
