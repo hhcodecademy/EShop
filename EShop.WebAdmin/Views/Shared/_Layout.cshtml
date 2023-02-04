@@ -23,7 +23,7 @@
     <link href="~/assets/css/dashboard/dash_1.css" rel="stylesheet" type="text/css" />
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
     <link rel="stylesheet" href="~/css/site.css" />
-   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 
 
 
@@ -38,7 +38,8 @@
         <div class="search-overlay"></div>
         <partial name="_Sidebar" />
         <div id="content" class="main-content">
-            @RenderBody()
+            <partial name="_Notification">
+                @RenderBody()
             <partial name="_Footer" />
         </div>
     </div>

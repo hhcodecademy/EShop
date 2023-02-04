@@ -1,9 +1,12 @@
 ﻿using EShop.BLL.Services.Inerfaces;
 using EShop.DAL.DBModel;
 using EShop.DAL.Dtos;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,10 +15,13 @@ namespace EShop.WebAdmin.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductService _service;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ProductsController(IProductService service)
+
+        public ProductsController(IProductService service, IHostingEnvironment hostingEnvironment)
         {
             _service = service;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -30,17 +36,59 @@ namespace EShop.WebAdmin.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(ProductDto itemDto)
-        {
+        //[HttpPost]
+        //public async Task<IActionResult> Create(ProductDto itemDto)
+        //{
 
-            var category = await _service.AddAsync(itemDto);
-            if (category != null)
+        //    var category = await _service.AddAsync(itemDto);
+        //    if (category != null)
+        //    {
+        //        TempData["success"] = "Kateqoriya uğurla əlavə edildi.";
+        //        return RedirectToAction("Index");
+        //    }
+        //    return Ok(category);
+        //}
+
+        [HttpPost]
+        public async Task<IActionResult> Create(ProductDto itemDto, List<IFormFile> files)
+        {
+            if (ModelState.IsValid)
             {
-                TempData["success"] = "Kateqoriya uğurla əlavə edildi.";
+                string wwwRootPath = _hostingEnvironment.WebRootPath;
+                string folderPath = @"Documents\ProductImages";
+                string fullPath = Path.Combine(wwwRootPath, folderPath);
+                itemDto.ProductDocuments = new List<ProductDocumentDto>();
+                foreach (var file in files)
+                {
+                    string fileName = Guid.NewGuid().ToString();
+                    string extension = Path.GetExtension(file.FileName);
+                    string realPath = Path.Combine(fullPath, fileName + extension);
+
+                    using (var fileStream = new FileStream(realPath, FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                    ProductDocumentDto productDocument = new ProductDocumentDto()
+                    {
+                        DocumentUrl = @"Documents/ProductImages/" + fileName + extension,
+                        
+
+                    };
+                    itemDto.ProductDocuments.Add(productDocument);
+
+                }
+                if (itemDto.ProductDocuments.Count > 0)
+                {
+                    itemDto.ProfileDocPath = itemDto.ProductDocuments[0].DocumentUrl;
+                }
+                await _service.AddAsync(itemDto);
+
+                TempData["success"] = "Product added succecfully";
                 return RedirectToAction("Index");
             }
-            return Ok(category);
+
+
+            return View(itemDto);
         }
 
     }

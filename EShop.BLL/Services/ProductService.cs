@@ -13,23 +13,22 @@ using System.Threading.Tasks;
 namespace EShop.BLL.Services
 {
     public class ProductService : GenericService<ProductDto, Product>,IProductService 
-
     {
       
         private readonly IGenericRepository<ProductCategory> _categoryRepository;
-        private readonly IMapper _mapper;
-        private readonly ILogger<GenericService<ProductDto, Product>> _logger;
-        public ProductService(IGenericRepository<Product> genericRepository, IMapper mapper, ILogger<GenericService<ProductDto, Product>> logger, IGenericRepository<ProductCategory> categoryRepository)
+        public ProductService(IGenericRepository<Product> genericRepository,
+            IMapper mapper, ILogger<GenericService<ProductDto, Product>> logger,
+            IGenericRepository<ProductCategory> categoryRepository)
             : base(genericRepository, mapper, logger)
         {
-            _mapper = mapper;
-            _logger = logger;
             _categoryRepository = categoryRepository;
         }
 
         public async Task<List<ProductCategoryDto>> GetCategoriesAsync()
         {
+            
             var categories = await _categoryRepository.GetListAsync();
+
             var categoryDtos = _mapper.Map<List<ProductCategoryDto>>(categories);
             return categoryDtos;
         }

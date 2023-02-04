@@ -17,7 +17,7 @@ namespace EShop.BLL.Services
         <TDto, TEntity> : IGenericService<TDto, TEntity> where TDto : class where TEntity : class
     {
         private readonly IGenericRepository<TEntity> _genericRepository;
-        private readonly IMapper _mapper;
+        protected readonly IMapper _mapper;
         private readonly ILogger<GenericService<TDto, TEntity>> _logger;
         public GenericService(IGenericRepository<TEntity> genericRepository, IMapper mapper, ILogger<GenericService<TDto, TEntity>> logger)
         {
