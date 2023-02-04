@@ -36,19 +36,13 @@ namespace EShop.WebAdmin.Controllers
             return View(model);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Create(ProductDto itemDto)
-        //{
-
-        //    var category = await _service.AddAsync(itemDto);
-        //    if (category != null)
-        //    {
-        //        TempData["success"] = "Kateqoriya uğurla əlavə edildi.";
-        //        return RedirectToAction("Index");
-        //    }
-        //    return Ok(category);
-        //}
-
+      
+        /// <summary>
+        ///  Add Product to database with Product Document
+        /// </summary>
+        /// <param name="itemDto"></param>
+        /// <param name="files"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Create(ProductDto itemDto, List<IFormFile> files)
         {

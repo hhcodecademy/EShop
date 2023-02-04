@@ -3,6 +3,7 @@ using EShop.BLL.Services;
 using EShop.BLL.Services.Inerfaces;
 using EShop.BLL.Validations;
 using EShop.DAL.Data;
+using EShop.DAL.DBModel;
 using EShop.DAL.Repository;
 using EShop.DAL.Repository.Interfaces;
 using FluentValidation;
@@ -10,6 +11,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +39,17 @@ namespace EShop.WebAdmin
             {
                 opts.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString"));
                 opts.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+
+            services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<AppDbContext>();
+            services.Configure<IdentityOptions>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+                cfg.Password.RequiredLength = 3;
+                cfg.Password.RequiredUniqueChars = 1;
+                cfg.Password.RequireUppercase = false;
+                cfg.Password.RequireLowercase = false;
+                cfg.Password.RequireNonAlphanumeric = false;
             });
             services.AddAutoMapper(typeof(CustomMapping));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

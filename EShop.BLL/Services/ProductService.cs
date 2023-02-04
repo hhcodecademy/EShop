@@ -23,7 +23,10 @@ namespace EShop.BLL.Services
         {
             _categoryRepository = categoryRepository;
         }
-
+        /// <summary>
+        /// Get product categories with current product
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<ProductCategoryDto>> GetCategoriesAsync()
         {
             

@@ -30,7 +30,11 @@ namespace EShop.WebAPI.Controllers
             var response = await _service.GetListAsync();
             return response;
         }
-
+        /// <summary>
+        ///  Id`ə uygun məhsul gətirən metod
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ProductCategoryDto>> GetByIdAsync(int id)
 
