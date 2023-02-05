@@ -1,4 +1,4 @@
-using EShop.BLL.Mapping;
+﻿using EShop.BLL.Mapping;
 using EShop.BLL.Services;
 using EShop.BLL.Services.Inerfaces;
 using EShop.BLL.Validations;
@@ -10,6 +10,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -41,16 +42,38 @@ namespace EShop.WebAdmin
                 opts.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
-            services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<AppDbContext>();
-            services.Configure<IdentityOptions>(cfg =>
+            services.AddIdentity<AppUser, AppRole>(opts =>
             {
-                cfg.User.RequireUniqueEmail = true;
-                cfg.Password.RequiredLength = 3;
-                cfg.Password.RequiredUniqueChars = 1;
-                cfg.Password.RequireUppercase = false;
-                cfg.Password.RequireLowercase = false;
-                cfg.Password.RequireNonAlphanumeric = false;
+
+                opts.User.RequireUniqueEmail = true;
+                opts.User.AllowedUserNameCharacters = "abcçdefgğhıijklmnoöpqrsştuüvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
+
+                opts.Password.RequiredLength = 4;
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.Password.RequireLowercase = false;
+                opts.Password.RequireUppercase = false;
+                opts.Password.RequireDigit = false;
+
+            }).AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+
+            CookieBuilder cookieBuilder = new CookieBuilder();
+            cookieBuilder.Name = "MyBlog";
+            cookieBuilder.HttpOnly = false;
+            cookieBuilder.SameSite = SameSiteMode.Lax;
+            cookieBuilder.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+
+            services.ConfigureApplicationCookie(opts =>
+            {
+
+                opts.LoginPath = new PathString("/Login/LogIn");
+                opts.LogoutPath = new PathString("/Login/LogOut");
+                opts.Cookie = cookieBuilder;
+                opts.SlidingExpiration = true;
+                opts.ExpireTimeSpan = System.TimeSpan.FromDays(60);
+                opts.AccessDeniedPath = new PathString("/Login/AccessDenied");
             });
+
             services.AddAutoMapper(typeof(CustomMapping));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
