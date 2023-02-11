@@ -1,6 +1,7 @@
 ﻿using EShop.DAL.DBModel;
 using EShop.DAL.Enums;
 using EShop.WebAdmin.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace EShop.WebAdmin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UserManagmentController : Controller
     {
         private UserManager<AppUser> _userManager;
@@ -65,7 +67,7 @@ namespace EShop.WebAdmin.Controllers
             {
                 AppUser user = new AppUser()
                 {
-                    
+
                     Name = viewModel.Name,
                     Surname = viewModel.Surname,
                     UserName = viewModel.UserName,
@@ -83,13 +85,16 @@ namespace EShop.WebAdmin.Controllers
 
         }
 
-        public string UserRole(string Id) {
+        public async Task<string> UserRole(string id)
+        {
 
-            List<AppRole> roles = _roleManager.Roles.ToList();
+            AppUser user = await _userManager.FindByIdAsync(id);
+            IList<string> roles = await _userManager.GetRolesAsync(user);
+
             StringBuilder builder = new StringBuilder();
             foreach (var item in roles)
             {
-                builder.Append(item.Name);
+                builder.Append(item+"; ");
             }
             return builder.ToString();
         }
@@ -170,16 +175,16 @@ namespace EShop.WebAdmin.Controllers
         public async Task<IActionResult> RoleAssign(UserRoleViewModel viewModel)
         {
             AppUser user = await _userManager.FindByIdAsync(viewModel.UserId);
-            if (user!=null)
+            if (user != null)
             {
-             IdentityResult result=   await _userManager.AddToRoleAsync(user, viewModel.RoleName);
+                IdentityResult result = await _userManager.AddToRoleAsync(user, viewModel.RoleName);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("UserIndex");
                 }
             }
 
-         
+
             return View(viewModel);
 
         }

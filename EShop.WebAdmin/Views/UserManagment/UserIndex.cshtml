@@ -57,10 +57,8 @@
                                             <a asp-controller="UserManagment" asp-action="UserUpdate" asp-route-id="@item.Id" class="btn btn-primary" aria-current="page"> <i class="bi bi-pencil-square"></i>Dəyiş</a>
                                             <a asp-controller="UserManagment" asp-action="RoleAssign" asp-route-id="@item.Id" class="btn btn-secondary" aria-current="page"> <i class="bi bi-person-gear"></i>RoleAta</a>
 
-                                            <a class="btn btn-outline-info mx-2 mx-sm-1" onclick="showModal()" id="nav-btn"><i class="bi bi-upc-scan"></i></a>
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                                Launch demo modal
-                                            </button>
+                                            <a class="btn btn-info" onclick="showModal('@item.Id')" id="nav-btn"><i class="bi bi-info-circle"></i>Info</a>
+                                     
                                        
                                         </td>
                                     </tr>
@@ -81,13 +79,14 @@
 
 </div>
 
-<partial name="UserRole"/>
+<partial name="UserRole" />
 
 <script>
-    function showModal() {
-
+    function showModal(userId) {
+  
         $.ajax({
-            url: "/UserManagment/UserRole",
+            url: "/UserManagment/UserRole/",
+            data: { id: userId },
             dataType: 'html',
             beforeSend: function () {
 

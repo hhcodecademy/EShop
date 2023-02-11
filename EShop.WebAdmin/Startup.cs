@@ -58,7 +58,7 @@ namespace EShop.WebAdmin
             .AddDefaultTokenProviders();
 
             CookieBuilder cookieBuilder = new CookieBuilder();
-            cookieBuilder.Name = "MyBlog";
+            cookieBuilder.Name = "EShop";
             cookieBuilder.HttpOnly = false;
             cookieBuilder.SameSite = SameSiteMode.Lax;
             cookieBuilder.SecurePolicy = CookieSecurePolicy.SameAsRequest;
@@ -66,12 +66,12 @@ namespace EShop.WebAdmin
             services.ConfigureApplicationCookie(opts =>
             {
 
-                opts.LoginPath = new PathString("/Login/LogIn");
-                opts.LogoutPath = new PathString("/Login/LogOut");
+                opts.LoginPath = new PathString("/Home/LogIn");
+                opts.LogoutPath = new PathString("/Home/LogOut");
                 opts.Cookie = cookieBuilder;
                 opts.SlidingExpiration = true;
                 opts.ExpireTimeSpan = System.TimeSpan.FromDays(60);
-                opts.AccessDeniedPath = new PathString("/Login/AccessDenied");
+                opts.AccessDeniedPath = new PathString("/Home/AccessDenied");
             });
 
             services.AddAutoMapper(typeof(CustomMapping));
@@ -104,14 +104,14 @@ namespace EShop.WebAdmin
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=LogIn}/{id?}");
             });
         }
     }

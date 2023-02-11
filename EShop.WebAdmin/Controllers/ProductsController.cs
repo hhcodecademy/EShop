@@ -1,6 +1,7 @@
 ﻿using EShop.BLL.Services.Inerfaces;
 using EShop.DAL.DBModel;
 using EShop.DAL.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace EShop.WebAdmin.Controllers
 {
+    [Authorize(Roles = "Operator")]
     public class ProductsController : Controller
     {
         private readonly IProductService _service;
