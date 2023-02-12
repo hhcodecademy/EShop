@@ -38,7 +38,7 @@ namespace EShop.WebAdmin
         {
             services.AddDbContext<AppDbContext>(opts =>
             {
-                opts.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString"));
+                opts.UseSqlServer(Configuration.GetConnectionString("RemoteConnectionString"));
                 opts.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
@@ -77,7 +77,7 @@ namespace EShop.WebAdmin
             services.AddAutoMapper(typeof(CustomMapping));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
-      
+            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddControllersWithViews();

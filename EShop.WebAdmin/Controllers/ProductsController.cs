@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace EShop.WebAdmin.Controllers
 {
-    [Authorize(Roles = "Operator")]
+    //[Authorize(Roles = "Operator")]
     public class ProductsController : Controller
     {
         private readonly IProductService _service;
@@ -25,7 +25,11 @@ namespace EShop.WebAdmin.Controllers
             _service = service;
             _hostingEnvironment = hostingEnvironment;
         }
-
+        public async Task<IActionResult> Index1()
+        {
+            var products = await _service.GetListAsync();
+            return View(products);
+        }
         public async Task<IActionResult> Index()
         {
             var products = await _service.GetListAsync();

@@ -1,6 +1,13 @@
+using EShop.BLL.Mapping;
+using EShop.BLL.Services;
+using EShop.BLL.Services.Inerfaces;
+using EShop.DAL.Data;
+using EShop.DAL.Repository;
+using EShop.DAL.Repository.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +30,17 @@ namespace EShop.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AppDbContext>(opts =>
+            {
+                opts.UseSqlServer(Configuration.GetConnectionString("RemoteConnectionString"));
+                opts.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+
+            services.AddAutoMapper(typeof(CustomMapping));
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductService, ProductService>();
             services.AddControllersWithViews();
         }
 

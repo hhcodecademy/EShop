@@ -13,7 +13,7 @@ namespace EShop.DAL.Repository
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
-        private readonly AppDbContext _dbContext;
+        protected readonly AppDbContext _dbContext;
         protected readonly DbSet<TEntity> _entities;
         public GenericRepository(AppDbContext dbContext)
         {

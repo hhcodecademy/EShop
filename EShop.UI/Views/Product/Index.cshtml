@@ -1,0 +1,90 @@
+﻿@model List<ProductDto>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="container">
+    <p>lorem50</p>
+    <h1>Ceyhun Index</h1>
+
+    <section class="product-wrapper container appear-animate mt-6 mt-md-10 pt-4 pb-8" data-animation-options="{
+                    'delay': '.3s'
+                }">
+        <h2 class="title title-center mb-5">Best Sellers</h2>
+        <div class="owl-carousel owl-theme row owl-nav-full cols-2 cols-md-3 cols-lg-4" data-owl-options="{
+                        'items': 5,
+                        'nav': false,
+                        'loop': false,
+                        'dots': true,
+                        'margin': 20,
+                        'responsive': {
+                            '0': {
+                                'items': 2
+                            },
+                            '768': {
+                                'items': 3
+                            },
+                            '992': {
+                                'items': 4,
+                                'dots': false,
+                                'nav': true
+                            }
+                        }
+                    }">
+
+            @{
+                foreach (var item in Model)
+                {
+                    <div class="product text-center">
+                        <figure class="product-media">
+                            <a href="product.html">
+                                <img src="~/@item.ProfileDocPath" alt="Blue Pinafore Denim Dress"
+                                     width="280" height="315" style="background-color: #f2f3f5;" />
+                            </a>
+                            <div class="product-label-group">
+                                <label class="product-label label-new">new</label>
+                            </div>
+                            <div class="product-action-vertical">
+                                <a href="#" class="btn-product-icon btn-cart" data-toggle="modal"
+                                   data-target="#addCartModal" title="Add to cart"><i class="d-icon-bag"></i></a>
+                                <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist">
+                                    <i class="d-icon-heart"></i>
+                                </a>
+                            </div>
+                            <div class="product-action">
+                  
+                                <a class="btn btn-primary" asp-controller="Product" asp-action="Detail" asp-route-id="@item.Id"  title="Quick View">
+                                    Quick View
+                                </a>
+                            </div>
+                        </figure>
+                        <div class="product-details">
+                            <div class="product-cat">
+                                <a href="shop-grid-3cols.html">Clothing</a>
+                            </div>
+                            <h3 class="product-name">
+                                <a href="product.html">Solid pattern in fashion summer dress</a>
+                            </h3>
+                            <div class="product-price">
+                                <span class="price">@item.UnitOfPrice</span>
+                            </div>
+                            <div class="ratings-container">
+                                <div class="ratings-full">
+                                    <span class="ratings" style="width:100%"></span>
+                                    <span class="tooltiptext tooltip-top"></span>
+                                </div>
+                                <a href="product.html" class="rating-reviews">( 12 reviews )</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+            }
+
+        </div>
+    </section>
+</div>
+
+
